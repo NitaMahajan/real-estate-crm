@@ -1,0 +1,39 @@
+{
+  "name": "real-estate-crm",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "concurrently \"pnpm -w --filter frontend dev\" \"pnpm -w --filter backend dev\"",
+    "dev:frontend": "pnpm -w --filter frontend dev",
+    "dev:backend": "pnpm -w --filter backend dev",
+    "build": "pnpm -w --parallel build",
+    "lint": "pnpm -w eslint .",
+    "lint:fix": "pnpm -w eslint . --fix",
+    "test": "echo \"No tests yet\" && exit 0",
+    "prepare": "husky",
+    "precommit": "pnpm -w lint-staged && pnpm -w test"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^8.47.0",
+    "@typescript-eslint/parser": "^8.47.0",
+    "concurrently": "^8.0.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
+    "prettier": "^2.8.8",
+    "pretty-quick": "^4.2.2",
+    "typescript": "^5.0.0"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx,jsx}": [
+      "pnpm -w eslint --fix",
+      "pnpm -w prettier --write",
+      "git add"
+    ],
+    "*.{json,md}": [
+      "pnpm -w prettier --write",
+      "git add"
+    ]
+  }
+}

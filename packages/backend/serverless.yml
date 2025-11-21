@@ -1,0 +1,73 @@
+service: re-crm-backend
+frameworkVersion: '3'
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs16.x # Change this to nodejs18.x before commiting to repo. nodejs16.x is only used for local testing
+  stage: ${opt:stage, "dev"}
+  region: ${env:AWS_REGION, "us-east-1"}
+  memorySize: 512
+  timeout: 30
+  environment:
+    NODE_ENV: ${env:NODE_ENV, "development"}
+    DATABASE_URL: ${env:DATABASE_URL}
+    JWT_SECRET: ${env:JWT_SECRET}
+    SESSION_SECRET: ${env:SESSION_SECRET}
+    AWS_ACCESS_KEY_ID: ${env:AWS_ACCESS_KEY_ID}
+    AWS_SECRET_ACCESS_KEY: ${env:AWS_SECRET_ACCESS_KEY}
+    AWS_REGION: ${env:AWS_REGION, "us-east-1"}
+    S3_BUCKET: ${env:S3_BUCKET, "recrm-local"}
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "s3:PutObject"
+        - "s3:GetObject"
+        - "s3:ListBucket"
+      Resource: "arn:aws:s3:::${env:S3_BUCKET}/*"
+
+package:
+  individually: true
+  exclude:
+    - node_modules/**
+    - .git/**
+    - .vscode/**
+    - "**/*.test.*"
+    - "prisma/**"
+    - ".env"
+
+plugins:
+  - serverless-esbuild
+  - serverless-offline
+  - serverless-dotenv-plugin
+
+functions:
+  health:
+    handler: src/handlers/health.handler
+    events:
+      - http:
+          path: health
+          method: get
+
+  createCustomer:
+    handler: src/handlers/customers.create
+    events:
+      - http:
+          path: customers
+          method: post
+
+custom:
+  serverless-offline:
+    httpPort: ${env:BACKEND_PORT, 3001}
+    noPrependStageInUrl: true
+    lambdaPort: 3002
+  esbuild:
+    bundle: true
+    format: cjs         # <--- force CommonJS output
+    platform: node
+    target: node18
+    sourcemap: true
+    minify: false
+    external:
+      - aws-sdk         # keep aws-sdk external; adjust as needed

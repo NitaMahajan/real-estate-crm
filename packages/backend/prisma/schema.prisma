@@ -1,0 +1,166 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Agent {
+  id         String   @id @default(uuid())
+  name       String
+  email      String   @unique
+  role       Role     @default(AGENT)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  customers  Customer[] 
+}
+
+model Customer {
+  id             String    @id @default(uuid())
+  agentId        String?   // optional owner
+  agent          Agent?    @relation(fields: [agentId], references: [id])
+  name           String
+  email          String?   @unique
+  phone          String?   
+  preferences    Json?     // { budgetMin, budgetMax, bhk, locations: [] }
+  tags           String[]  @default([])
+  source         String?   
+  lastContacted  DateTime?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime?
+
+  matches        Match[]
+  messages       Message[]
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  name        String
+  address     String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  inventory   InventoryUnit[]
+}
+
+model InventoryUnit {
+  id           String   @id @default(uuid())
+  projectId    String?
+  project      Project? @relation(fields: [projectId], references: [id])
+  title        String
+  description  String?
+  type         ListingType @default(SALE) // SALE or RENT
+  price        Float?
+  areaSqFt     Float?
+  bedrooms     Int?
+  location     String?
+  status       InventoryStatus @default(AVAILABLE)
+  attributes   Json?     // extra attributes
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  deletedAt    DateTime?
+
+  images       Image[]
+  matches      Match[]
+  messages     Message[]
+}
+
+model Image {
+  id            String   @id @default(uuid())
+  inventoryId   String
+  inventory     InventoryUnit @relation(fields: [inventoryId], references: [id])
+  url           String
+  caption       String?
+  createdAt     DateTime @default(now())
+}
+
+model Match {
+  id            String   @id @default(uuid())
+  inventoryId   String
+  customerId    String
+  score         Float
+  reason        String?   // short explanation from AI
+  workflowRunId String?   // link to the run that generated this match
+  createdAt     DateTime  @default(now())
+
+  inventory     InventoryUnit @relation(fields: [inventoryId], references: [id])
+  customer      Customer      @relation(fields: [customerId], references: [id])
+
+  @@index([inventoryId])
+  @@index([customerId])
+  @@index([score])
+}
+
+model Message {
+  id            String   @id @default(uuid())
+  customerId    String
+  inventoryId   String? 
+  channel       Channel
+  status        MessageStatus @default(PENDING)
+  payload       Json
+  sentAt        DateTime?
+  deliveredAt   DateTime?
+  createdAt     DateTime @default(now())
+
+  customer      Customer      @relation(fields: [customerId], references: [id])
+  inventory     InventoryUnit? @relation(fields: [inventoryId], references: [id])
+}
+
+model WorkflowRun {
+  id           String   @id @default(uuid())
+  triggerType  TriggerType
+  status       RunStatus @default(PENDING)
+  startedAt    DateTime  @default(now())
+  endedAt      DateTime?
+  metadata     Json?
+}
+
+enum Role {
+  ADMIN
+  AGENT
+}
+
+enum ListingType {
+  SALE
+  RENT
+}
+
+enum InventoryStatus {
+  AVAILABLE
+  RESERVED
+  SOLD
+}
+
+enum Channel {
+  EMAIL
+  WHATSAPP
+  SMS
+}
+
+enum MessageStatus {
+  PENDING
+  SENT
+  FAILED
+  DELIVERED
+}
+
+enum TriggerType {
+  MANUAL
+  INVENTORY_ADDED
+  SCHEDULED
+}
+
+enum RunStatus {
+  PENDING
+  RUNNING
+  SUCCEEDED
+  FAILED
+}

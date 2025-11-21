@@ -1,0 +1,25 @@
+node_modules
+.pnpm-store/
+.pnpm-debug.log
+pnpm-lock.yaml
+
+dist/
+build/
+coverage/
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# IDEs / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+packages/frontend/.next
+packages/backend/.esbuild
+packages/backend/prisma/migrations/20251119061342_init/migration.sql
+
+.serverless/
+.cache/
+

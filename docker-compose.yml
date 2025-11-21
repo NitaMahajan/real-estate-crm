@@ -1,0 +1,73 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: recrm_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: recrm
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d recrm"]
+      interval: 5s
+      retries: 10
+      timeout: 5s
+
+  localstack:
+    image: localstack/localstack:1.4
+    container_name: recrm_localstack
+    environment:
+      - SERVICES=s3,sqs,sns,stepfunctions,secretsmanager,ssm
+      - DEFAULT_REGION=us-east-1
+      - DATA_DIR=/tmp/localstack/data
+      - DEBUG=1
+    ports:
+      - "4566:4566"    # single edge port (recommended)
+      - "4510-4559:4510-4559"
+    volumes:
+      - localstack_data:/tmp/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:4566/health || exit 1"]
+      interval: 10s
+      retries: 6
+
+  mailhog:
+    image: mailhog/mailhog
+    container_name: recrm_mailhog
+    ports:
+      - "1025:1025"  # SMTP
+      - "8025:8025"  # Web UI
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8025 || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: quay.io/minio/minio:RELEASE.2025-07-18T21-56-31Z
+    container_name: recrm_minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"  # S3 API
+      - "9001:9001"  # Console
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9001/minio/health/live || exit 1"]
+      interval: 10s
+      retries: 6
+
+volumes:
+  pgdata:
+  localstack_data:
+  minio_data:

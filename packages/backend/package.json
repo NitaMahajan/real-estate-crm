@@ -1,0 +1,41 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev:local": "SLS_DEBUG=* serverless offline --httpPort 3001 --noPrependStageInUrl --stage dev",
+    "dev:stage": "SLS_DEBUG=* serverless offline --httpPort 3001 --noPrependStageInUrl --stage stage",
+    "dev:prod": "SLS_DEBUG=* serverless offline --httpPort 3001 --noPrependStageInUrl --stage prod",
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write .",
+    "migrate:dev": "prisma migrate dev --name init --preview-feature",
+    "migrate:deploy": "prisma migrate deploy",
+    "generate": "prisma generate",
+    "seed": "ts-node --transpile-only prisma/seed.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.20.0",
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.158",
+    "@types/node": "^24.10.1",
+    "concurrently": "^8.2.2",
+    "dotenv": "^17.2.3",
+    "esbuild": "^0.27.0",
+    "eslint": "^9.39.1",
+    "prisma": "^6.19.0",
+    "serverless": "^3.39.0",
+    "serverless-dotenv-plugin": "^6.0.0",
+    "serverless-esbuild": "^1.55.2",
+    "serverless-offline": "^10.3.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.19.0",
+    "aws-sdk": "^2.1692.0"
+  }
+}
