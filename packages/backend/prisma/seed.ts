@@ -32,7 +32,7 @@ async function main() {
     data: {
       name: "Admin User",
       email: "admin@recrm.local",
-      role: "ADMIN",
+      role: "ADMIN"
     },
   });
 

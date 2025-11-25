@@ -1,0 +1,17 @@
+{
+    "color": {
+      "brand": { "50": "#f0f7ff", "100": "#dbefff", "500": "#0b6cff", "700": "#074bb3" },
+      "muted": { "100": "#f5f7fb", "500": "#6b7280", "700": "#374151" },
+      "success": { "500": "#16a34a" },
+      "danger": { "500": "#dc2626" },
+      "bg": { "light": "#ffffff", "dark": "#0b1220" }
+    },
+    "font": {
+      "family": { "base": "Inter, ui-sans-serif, system-ui, -apple-system" },
+      "size": { "sm": "0.875rem", "base": "1rem", "lg": "1.125rem" }
+    },
+    "radius": { "sm": "6px", "md": "12px", "lg": "20px" },
+    "space": { "1": "4px", "2": "8px", "3": "12px", "4": "16px", "6": "24px" },
+    "shadow": { "sm": "0 1px 2px rgba(2,6,23,0.06)", "md": "0 4px 16px rgba(2,6,23,0.08)" }
+  }
+  

@@ -18,8 +18,7 @@ Thumbs.db
 
 packages/frontend/.next
 packages/backend/.esbuild
-packages/backend/prisma/migrations/20251119061342_init/migration.sql
-
 .serverless/
 .cache/
 
+packages/backend/prisma/migrations/*
