@@ -56,6 +56,46 @@ functions:
       - http:
           path: customers
           method: post
+  
+  register:
+    handler: src/handlers/auth/register.handler
+    events:
+      - http:
+          path: auth/register
+          method: post
+          cors: true
+
+  login:
+    handler: src/handlers/auth/login.handler
+    events:
+      - http:
+          path: auth/login
+          method: post
+          cors: true
+
+  me:
+    handler: src/handlers/auth/me.handler
+    events:
+      - http:
+          path: auth/me
+          method: get
+          cors: true
+
+  refreshToken:
+    handler: src/handlers/auth/refresh.handler
+    events:
+      - http:
+          path: auth/refresh
+          method: post
+          cors: true
+
+  adminStats:
+    handler: src/handlers/admin/getStats.handler
+    events:
+      - http:
+          path: admin/stats
+          method: get
+          cors: true
 
 custom:
   serverless-offline:
