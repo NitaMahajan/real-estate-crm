@@ -20,6 +20,43 @@ Prisma studio (UI for postgres db) will be up on http://localhost:5555
 FILE: packages/backend/prisma/seed.ts
 WHAT IT DOES: Creates dummy data in all the tables.
 
+#### Pushing to db: good for local
+> npx prisma db push
 
+
+## APIs Available :-
+
+Register an agent in the portal
+
+> curl --location 'http://localhost:3001/auth/register' \ --header 'Content-Type: application/json' \ --data-raw '{ "name": "Nov21SecondAgent","email": "nov21second@local","password": "Nov21SecondAgent123"}'
+
+Response
+{
+    "agent": {
+        "id": "f6..",
+        "name": "Nov21SecondAgent",
+        "email": "nov21second@local",
+        "role": "AGENT",
+        "createdAt": "timestamp"
+    }
+}
+
+Login an agent in portal
+
+curl --location 'http://localhost:3001/auth/login' \
+--header 'Content-Type: application/json' \
+--data-raw '{"email":"nov21second@local","password":"Nov21SecondAgent123"}'
+
+Response
+{
+    "accessToken": "ey..",
+    "refreshToken": "ey..",
+    "user": {
+        "id": "f6..",
+        "name": "Nov21SecondAgent",
+        "email": "nov21second@local",
+        "role": "AGENT"
+    }
+}
 
 

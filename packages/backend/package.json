@@ -7,6 +7,7 @@
     "dev:local": "SLS_DEBUG=* serverless offline --httpPort 3001 --noPrependStageInUrl --stage dev",
     "dev:stage": "SLS_DEBUG=* serverless offline --httpPort 3001 --noPrependStageInUrl --stage stage",
     "dev:prod": "SLS_DEBUG=* serverless offline --httpPort 3001 --noPrependStageInUrl --stage prod",
+    "debug": "node --inspect=9229 ./node_modules/.pnpm/serverless@*/node_modules/serverless/bin/serverless.js offline --httpPort 3001 --noPrependStageInUrl",
     "build": "tsc -p tsconfig.json",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write .",
@@ -21,6 +22,8 @@
   "packageManager": "pnpm@10.20.0",
   "devDependencies": {
     "@types/aws-lambda": "^8.10.158",
+    "@types/cookie": "^1.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.10.1",
     "concurrently": "^8.2.2",
     "dotenv": "^17.2.3",
@@ -36,6 +39,9 @@
   },
   "dependencies": {
     "@prisma/client": "^6.19.0",
-    "aws-sdk": "^2.1692.0"
+    "aws-sdk": "^2.1692.0",
+    "bcryptjs": "^3.0.3",
+    "cookie": "^1.0.2",
+    "jsonwebtoken": "^9.0.2"
   }
 }
